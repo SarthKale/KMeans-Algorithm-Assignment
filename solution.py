@@ -38,6 +38,8 @@ def get_k_means(user_feature_map, num_features_per_user, k):
             centroid_values = calculate_mean(dataset, centroid_values)
         if centroid_values == old_centroids and i > 10:
             break
+        else:
+            old_centroids = centroid_values
     centroid_values = [[round(value, 3) for value in centroid]
                        for centroid in centroid_values]
     print("\nRounded Centroids :", centroid_values)
