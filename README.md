@@ -1,12 +1,16 @@
-# KMeans-Algorithm
-Implementation of K-Means algorithm using core python which displays the centroid of the dataset.
+# KMeans-Algorithm-Assignment
+Implementation of K-Means algorithm using python which displays the centroids for the dataset.
+
+## Requirements
+
+* python3
 
 ## Getting Started
 
 To clone this repository, run the following in a terminal
 ```bash
-git clone git@github.com:SarthKale/KMeans-Algorithm.git
-cd KMeans-Algorithm
+git clone https://github.com/SarthKale/KMeans-Algorithm-Assignment.git
+cd KMeans-Algorithm-Assignment 
 ```
 
 ### Run unittests
@@ -14,25 +18,28 @@ cd KMeans-Algorithm
 Run python unittests.
 
 ```bash
-python3 -m unittest tests/test_Kmeans.py
+python3 -m unittest tests/test_kmeans_algorithm_assignment.py
 ```
 
 ## Run Application
 
-This application takes a user_feature_map dictionary, mapping each user "uid_i" to a respective list of features associated with the user in question. This application use the k-means algorithm to return the `k` means(for centroids) for the provided user features.
+This application takes a `user_feature_map` python dictionary, mapping each user `"uid_i"` to a respective list of features associated with the user in question. This application use the k-means algorithm to return the `k` means(or centroids) for the provided user features.
 
-Note: These user features are the result of a dimensionality reduction by PCA on some user-app interaction data. Here, we have direct access to this data.
-
-Make sure you have python3.9 installed on your system.
+Note: These user features are the result of a dimensionality reduction by Principal Component Analysis on some user-app interaction data. Here, we have direct access to this data.
 
 ```bash
-python3 src/solution.py
+python3 src/kmeans_algorithm_assignment.py <input> <k_value>
+```
+
+**Example**
+```bash
+python3 src/kmeans_algorithm_assignment.py ./data/in.json 1
 ```
 
 ## Tech Stack
 
-* **Programming Language : Python 3.8**
-* **Version Control : Git**
+* **Programming Language : Python3**
+* **Python Code Formatter : autopep8**
 
 ## Author
 

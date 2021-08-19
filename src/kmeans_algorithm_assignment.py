@@ -1,4 +1,6 @@
 import random
+import sys
+import json
 
 
 class Centroid:
@@ -16,7 +18,6 @@ def get_k_means(user_feature_map, num_features_per_user, k):
 
     # Write your code here.
     if k < 1:
-        print([])
         return []
     # Creating the list of Centroid class objects and
     # a value point specific dataset.
@@ -54,7 +55,6 @@ def get_k_means(user_feature_map, num_features_per_user, k):
     # Rounding the output values to fourth decimal.
     centroid_values = [[round(value, 3) for value in centroid.location]
                        for centroid in centroid_values]
-    print(centroid_values)
     return centroid_values
 
 
@@ -103,10 +103,13 @@ def calculate_distance(point, mean):
 
 
 if __name__ == "__main__":
-    dt = {"uid_0": [-1.479359467505669, -1.895497044385029, -2.0461402601759096, -1.7109256402185178],
-          'uid_1': [-1.8284426855307128, -1.714098142408679, -0.9893682669649455, -1.5766569391907947],
-          "uid_2": [-1.8398933218386004, -1.7896757009107565, -1.1370177175666063, -1.0218512556903283],
-          "uid_3": [-1.23224975874512, -1.8447858273094768, -1.8496517744301924, -2.4720755654344186],
-          "uid_4": [-1.7714737791268318, -1.2725603446513774, -1.5512094954034525, -1.2589442628984848]}
-
-    get_k_means(dt, 4, 3)
+    arguments = sys.argv
+    if len(arguments) != 3:
+        print("Usage: python3 src/kmeans_algorithm_assignment.py <input> <k_value>")
+        sys.exit(1)
+    file_name = arguments[1]
+    with open(file_name, mode="r") as file:
+        data = json.load(file)
+    features = len(list(data.values())[0])
+    k = int(arguments[2])
+    print(get_k_means(data, features, k))
