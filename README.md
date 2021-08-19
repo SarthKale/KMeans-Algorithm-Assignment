@@ -3,7 +3,7 @@ Implementation of K-Means algorithm using python which displays the centroids fo
 
 ## Requirements
 
-* python3
+* Python3
 
 ## Getting Started
 
@@ -15,15 +15,13 @@ cd KMeans-Algorithm-Assignment
 
 ### Run unittests
 
-Run python unittests.
-
 ```bash
 python3 -m unittest tests/test_kmeans_algorithm_assignment.py
 ```
 
 ## Run Application
 
-This application takes a `user_feature_map` python dictionary, mapping each user `"uid_i"` to a respective list of features associated with the user in question. This application use the k-means algorithm to return the `k` means(or centroids) for the provided user features.
+This application takes a `user_feature_map` python dictionary, mapping each user `"uid_i"` to a respective list of features associated with the user in question. This application uses the k-means algorithm to return the `k` means(or centroids) for the provided user features.
 
 Note: These user features are the result of a dimensionality reduction by Principal Component Analysis on some user-app interaction data. Here, we have direct access to this data.
 
@@ -38,8 +36,8 @@ python3 src/kmeans_algorithm_assignment.py ./data/in.json 1
 
 ## Tech Stack
 
-* **Programming Language : Python3**
-* **Python Code Formatter : autopep8**
+* Programming Language : Python3
+* Python Code Formatter : autopep8
 
 ## Author
 
