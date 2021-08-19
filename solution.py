@@ -68,9 +68,9 @@ def calculate_mean(dataset, centroids, classes=None):
             tmp = []
             for index in range(len(dataset[0])):
                 total = 0
-                for row in collection:
+                for row in set(collection):
                     total += row[index]
-                tmp.append(total/len(dataset[0]))
+                tmp.append(total/len(set(collection)))
             new_mean.append(tmp)
 
     print("\nNew Mean :", new_mean)
