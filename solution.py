@@ -96,6 +96,7 @@ def create_dataset(data):
 
 
 def calculate_distance(point, mean):
+    # Applying Manhattan distance matric.
     if len(mean) != len(point):
         return 0
     return sum(abs(m - p) for m, p in zip(mean, point))
