@@ -15,62 +15,79 @@ def get_k_means(user_feature_map, num_features_per_user, k):
         sorted(list(user_feature_map.keys())), k)
 
     # Write your code here.
-    print(inital_centroid_users)
-    old_centroid_values = list(
-        map(lambda x: user_feature_map[x], inital_centroid_users))
-    print(old_centroid_values)
-    if k < 1 or k > len(user_feature_map):
+    if k < 1:
+        print([])
         return []
-    new_centroids = []
-    count = 0
-    while new_centroids != old_centroid_values or count < 10:
-        cluster_list = []
-        for point in user_feature_map:
-            min_distance = -1
-            for key in old_centroid_values:
-                dist = calculate_distance(
-                    key, user_feature_map[point])
-                if min_distance == -1:
-                    min_distance = dist
-                    cluster_list.append(key)
-                elif min_distance > dist:
-                    min_distance = dist
-                    cluster_list[-1] = key
-        # calculating new mean
-        for x in old_centroid_values:
+    centroid_values = list(user_feature_map[value]
+                           for value in inital_centroid_users)
+    dataset = create_dataset(user_feature_map)
+    old_centroids = centroid_values.copy()
+    for i in range(100):
+        distance = []
+        for row in dataset:
             tmp = []
-            for i in range(len(cluster_list)):
-                if x == cluster_list[i]:
-                    s = "uid_" + str(i)
-                    tmp.append(user_feature_map[s])
-            lst = []
-            for i in range(num_features_per_user):
+            for centroid in centroid_values:
+                tmp.append(calculate_distance(row, centroid))
+            distance.append(tmp)
+        if len(centroid_values) > 1:
+            classes = []
+            for row in distance:
+                classes.append(row.index(min(*row)))
+            centroid_values = calculate_mean(dataset, centroid_values, classes)
+        else:
+            centroid_values = calculate_mean(dataset, centroid_values)
+        if centroid_values == old_centroids and i > 10:
+            break
+        else:
+            old_centroids = centroid_values
+    centroid_values = [[round(value, 3) for value in centroid]
+                       for centroid in centroid_values]
+    print("\nRounded Centroids :", centroid_values)
+    return centroid_values
+
+
+def calculate_mean(dataset, centroids, classes=None):
+    new_mean = []
+    if len(centroids) == 1:
+        tmp = []
+        for index in range(len(dataset[0])):
+            total = 0
+            for row in dataset:
+                total += row[index]
+            tmp.append(total/len(dataset[0]))
+        new_mean.append(tmp)
+    else:
+        collections = []
+        for i in range(len(centroids)):
+            tmp = []
+            for j in range(len(classes)):
+                if i == classes[j]:
+                    tmp.append(dataset[j])
+            collections.append(tmp)
+        for collection in collections:
+            tmp = []
+            for index in range(len(dataset[0])):
                 total = 0
-                for j in tmp:
-                    total += j[i]
-                lst.append(total/len(tmp))
-            new_centroids.append(lst)
-        print("New Centroid : ", new_centroids)
-        if old_centroid_values != new_centroids:
-            old_centroid_values.clear()
-            old_centroid_values = new_centroids.copy()
-            new_centroids.clear()
-        print("Count :", count)
-        count += 1
-    for centroid in new_centroids:
-        centroid = list(map(lambda x: round(x, 4), centroid)).copy()
-    print("New Centroid : ", list(
-        map(list, (set(map(lambda x: tuple(sorted(x)), new_centroids))))))
-    return new_centroids
+                for row in set(collection):
+                    total += row[index]
+                tmp.append(total/len(set(collection)))
+            new_mean.append(tmp)
+
+    print("\nNew Mean :", new_mean)
+    return new_mean
 
 
-def calculate_distance(mean, point):
+def create_dataset(data):
+    dataset = []
+    for value in data.values():
+        dataset.append(value)
+    return dataset
+
+
+def calculate_distance(point, mean):
     if len(mean) != len(point):
         return 0
-    total = 0
-    for i in range(len(mean)):
-        total += abs(mean[i] - point[i])
-    return total
+    return sum(abs(m - p) for m, p in zip(mean, point))
 
 
 dt = {"uid_0": [-1.479359467505669, -1.895497044385029, -2.0461402601759096, -1.7109256402185178],
@@ -78,7 +95,5 @@ dt = {"uid_0": [-1.479359467505669, -1.895497044385029, -2.0461402601759096, -1.
       "uid_2": [-1.8398933218386004, -1.7896757009107565, -1.1370177175666063, -1.0218512556903283],
       "uid_3": [-1.23224975874512, -1.8447858273094768, -1.8496517744301924, -2.4720755654344186],
       "uid_4": [-1.7714737791268318, -1.2725603446513774, -1.5512094954034525, -1.2589442628984848]}
+
 get_k_means(dt, 4, 1)
-
-
-# Task : k = 3 me issue h

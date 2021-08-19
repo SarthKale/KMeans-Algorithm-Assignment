@@ -18,8 +18,8 @@ def get_k_means(user_feature_map, num_features_per_user, k):
     if k < 1:
         print([])
         return []
-    centroid_values = list(user_feature_map[value]
-                           for value in inital_centroid_users)
+    centroid_values = [Centroid(user_feature_map[value])
+                       for value in inital_centroid_users]
     dataset = create_dataset(user_feature_map)
     old_centroids = centroid_values.copy()
     for i in range(100):
@@ -27,7 +27,7 @@ def get_k_means(user_feature_map, num_features_per_user, k):
         for row in dataset:
             tmp = []
             for centroid in centroid_values:
-                tmp.append(calculate_distance(row, centroid))
+                tmp.append(calculate_distance(row, centroid.location))
             distance.append(tmp)
         if len(centroid_values) > 1:
             classes = []
@@ -40,9 +40,9 @@ def get_k_means(user_feature_map, num_features_per_user, k):
             break
         else:
             old_centroids = centroid_values
-    centroid_values = [[round(value, 3) for value in centroid]
+    centroid_values = [[round(value, 3) for value in centroid.location]
                        for centroid in centroid_values]
-    print("\nRounded Centroids :", centroid_values)
+    print(centroid_values)
     return centroid_values
 
 
@@ -54,26 +54,25 @@ def calculate_mean(dataset, centroids, classes=None):
             total = 0
             for row in dataset:
                 total += row[index]
-            tmp.append(total/len(dataset[0]))
-        new_mean.append(tmp)
+            tmp.append(total/len(dataset))
+        centroids[0].location = tmp
+        new_mean.append(*centroids)
     else:
-        collections = []
+        for centroid in centroids:
+            centroid.closest_users.clear()
         for i in range(len(centroids)):
-            tmp = []
             for j in range(len(classes)):
                 if i == classes[j]:
-                    tmp.append(dataset[j])
-            collections.append(tmp)
-        for collection in collections:
+                    centroids[i].closest_users.add(tuple(dataset[j]))
+        for centroid in centroids:
             tmp = []
             for index in range(len(dataset[0])):
                 total = 0
-                for row in set(collection):
+                for row in centroid.closest_users:
                     total += row[index]
-                tmp.append(total/len(set(collection)))
-            new_mean.append(tmp)
-
-    print("\nNew Mean :", new_mean)
+                tmp.append(total/len(centroid.closest_users))
+            centroid.location = tmp
+            new_mean.append(centroid)
     return new_mean
 
 
